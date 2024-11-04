@@ -1,5 +1,8 @@
 package com.qn.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,8 +10,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+
 
 @Entity
 @Table(name="student")
@@ -28,20 +34,27 @@ public class Student {
 	@Column(name="email")
 	private String email;
 	
-	//////////////////////////////////////////////////////////////
 	@JoinColumn(name="student_detail_id")
 	@OneToOne(cascade=CascadeType.ALL)
 	private Student_detail sd;
+	
+	@OneToMany(mappedBy="s", cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	private List<Course> c;
 
-	public Student_detail getSd() {
-		return sd;
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public Student(String first_name, String last_name, String email) {
+		super();
+		this.first_name = first_name;
+		this.last_name = last_name;
+		this.email = email;
 	}
 
-	public void setSd(Student_detail sd) {
-		this.sd = sd;
+	public Student() {
+		super();
 	}
-	///////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	
 	public int getId() {
 		return id;
 	}
@@ -73,21 +86,7 @@ public class Student {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
-	
-	////////////////////////////////////////////////////////////////////////////
-	
-	public Student( String first_name, String last_name, String email) {
-		super();
-		this.first_name = first_name;
-		this.last_name = last_name;
-		this.email = email;
-	}
-
-	public Student() {
-		super();
-	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@Override
 	public String toString() {
@@ -95,6 +94,17 @@ public class Student {
 				+ "]";
 	}
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public void addCourse(Course tempCourse)
+	{
+		if(c==null)
+		{
+			c=new ArrayList<>();
+		}
+		c.add(tempCourse);
+		tempCourse.setS(this);
+	}
 	
 	
 	
